@@ -6,7 +6,7 @@
   <style>
     body { font-family: sans-serif; margin: 2rem; }
     textarea { width: 100%; height: 200px; margin-bottom: 1rem; }
-    button { padding: 0.5rem 1rem; }
+    button { padding: 0.5rem 1rem; margin-right: 0.5rem; margin-top: 0.5rem; }
     pre { background: #f4f4f4; padding: 1rem; white-space: pre-wrap; }
   </style>
 </head>
@@ -18,6 +18,8 @@
   <textarea id="input" placeholder="https://example.com/page\nexample.org/page2"></textarea><br>
   
   <button onclick="extractDomains()">Обрезать до доменов</button>
+  <button onclick="removeWWW()">Удалить www.</button>
+  <button onclick="removeProtocols()">Удалить http:// и https://</button>
 
   <h2>Результат:</h2>
   <pre id="output"></pre>
@@ -34,7 +36,7 @@
 
         // добавим схему, если её нет
         if (!/^https?:\/\//i.test(url)) {
-          url = 'http://' + url;
+          url = 'https://' + url;
         }
 
         try {
@@ -46,6 +48,24 @@
       });
 
       document.getElementById('output').textContent = Array.from(domains).join('\n');
+    }
+
+    function removeWWW() {
+      const output = document.getElementById('output');
+      const updated = output.textContent
+        .split('\n')
+        .map(line => line.replace('//www.', '//'))
+        .join('\n');
+      output.textContent = updated;
+    }
+
+    function removeProtocols() {
+      const output = document.getElementById('output');
+      const updated = output.textContent
+        .split('\n')
+        .map(line => line.replace(/^https?:\/\//, ''))
+        .join('\n');
+      output.textContent = updated;
     }
   </script>
 
