@@ -18,8 +18,7 @@
   <textarea id="input" placeholder="https://example.com/page\nexample.org/page2"></textarea><br>
   
   <button onclick="extractDomains()">Обрезать до доменов</button>
-  <button onclick="removeWWW()">Удалить www.</button>
-  <button onclick="removeProtocols()">Удалить http:// и https://</button>
+  <button onclick="cleanDomains()">Очистить домены</button>
 
   <h2>Результат:</h2>
   <pre id="output"></pre>
@@ -50,20 +49,16 @@
       document.getElementById('output').textContent = Array.from(domains).join('\n');
     }
 
-    function removeWWW() {
+    function cleanDomains() {
       const output = document.getElementById('output');
       const updated = output.textContent
         .split('\n')
-        .map(line => line.replace('//www.', '//'))
-        .join('\n');
-      output.textContent = updated;
-    }
-
-    function removeProtocols() {
-      const output = document.getElementById('output');
-      const updated = output.textContent
-        .split('\n')
-        .map(line => line.replace(/^https?:\/\//, ''))
+        .map(line =>
+          line
+            .replace(/^https?:\/\//i, '')  // Удалить протокол
+            .replace(/^www\./i, '')        // Удалить www.
+            .replace(/\/$/, '')            // Удалить завершающий /
+        )
         .join('\n');
       output.textContent = updated;
     }
